@@ -19,24 +19,43 @@ client = discord.Client(intents=intents)
 async def on_ready():
     print('Bot đã sẵn sàng!')
 
-    # Tải ảnh từ URL
-    url = 'https://---Link Ảnh tại đây'
+    # Thay đổi biểu ngữ
+    await change_banner()
+
+    # Thay đổi avatar
+    await change_avatar()
+
+async def change_banner():
+    url = 'URL_BANNER_CUA_BAN'
     response = requests.get(url)
     image_data = response.content
 
-    # Chuyển đổi ảnh thành base64
     image_base64 = discord.utils._bytes_to_base64_data(image_data)
 
-    # Tạo payload
     payload = {'banner': image_base64}
 
-    # Gửi yêu cầu PATCH để cập nhật biểu ngữ của bot
     async with aiohttp.ClientSession() as session:
         async with session.patch('https://discord.com/api/v9/users/@me', headers={'Authorization': f'Bot {TOKEN}'}, json=payload) as response:
             if response.status == 200:
-                print('Anh bìa đã được cập nhật thành công!')
+                print('Ảnh bìa đã được cập nhật thành công!')
             else:
                 print(f'Lỗi khi cập nhật ảnh bìa : {response.status}')
+
+async def change_avatar():
+    url_avatar = 'URL_AVATAR_CUA_BAN'
+    response_avatar = requests.get(url_avatar)
+    avatar_data = response_avatar.content
+
+    avatar_base64 = discord.utils._bytes_to_base64_data(avatar_data)
+
+    payload_avatar = {'avatar': avatar_base64}
+
+    async with aiohttp.ClientSession() as session:
+        async with session.patch('https://discord.com/api/v9/users/@me', headers={'Authorization': f'Bot {TOKEN}'}, json=payload_avatar) as response:
+            if response.status == 200:
+                print('Avatar đã được cập nhật thành công!')
+            else:
+                print(f'Lỗi khi cập nhật avatar: {response.status}')
 
 # Chạy bot
 client.run(TOKEN)
