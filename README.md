@@ -31,3 +31,22 @@ TOKEN = 'token here'
 # Tải ảnh từ URL
 url = 'https://---Link Ảnh tại đây'- có hỗ trợ gif
 ```
+
+## Change Avatar
+```avatar
+async def change_avatar():
+    url_avatar = 'Link URL'
+    response_avatar = requests.get(url_avatar)
+    avatar_data = response_avatar.content
+
+    avatar_base64 = discord.utils._bytes_to_base64_data(avatar_data)
+
+    payload_avatar = {'avatar': avatar_base64}
+
+    async with aiohttp.ClientSession() as session:
+        async with session.patch('https://discord.com/api/v9/users/@me', headers={'Authorization': f'Bot {TOKEN}'}, json=payload_avatar) as response:
+            if response.status == 200:
+                print('Avatar đã được cập nhật thành công!')
+            else:
+                print(f'Lỗi khi cập nhật avatar: {response.status}')
+```
